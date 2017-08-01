@@ -1,14 +1,8 @@
 
 \documentclass[twocolumn]{article}
 \usepackage{amsmath}
+\usepackage{breqn}
 
-
-%Suppose we must determine whether a certain non-observable condition holds.
-%We are particularly interested in situations where our decision, in and by
-%itself, can have momentous consequences for the subjects to which it applies.
-%For example, we might want to predict whether a debitor will default, or
-%whether a defendant is guilty of a crime, or whether a prisoner will
-%recidivate, etc.
 
 \begin{document}
 
@@ -22,43 +16,42 @@
 % importance.
 
 % We write $+$ (for "positive condition") to denote cases in which the event
-% actually occurs, and $\mathcal{P}$ (for "predicted") to denote cases in which 
-% the test predicted that the event would occur. Ideally, of course, we would want $+$ and $\mathcal{P}$ to be identical.
+% actually occurs, and $Pred$ (for "predicted") to denote cases in which 
+% the test predicted that the event would occur. Ideally, of course, we would want $+$ and $Pred$ to be identical.
 
 
 % In many situations, different groups or populations will differ in the rate at
 % which they undergo the event of interest. That is, members of certain groups
-% will have a higher or lower probability of undergoing the event - $P(+)$ will
+% will have a higher or lower probability of undergoing the event - $P(Y)$ will
 % vary among groups. Such a situation produces a clear possibility of
 % discrimination, or \emph{bias}. We want our predictions to be fair and
 % unbiased across groups.
 
 % But what does it mean to be fair or unbiased? Simply equalizing prediction
-% rates $P(\mathcal{P})$ across groups is unsatisfactory if groups do differ in base rate
-% $P(+)$. We want the algorithm to reflect the different base rates across
+% rates $P(Pred)$ across groups is unsatisfactory if groups do differ in base rate
+% $P(Y)$. We want the algorithm to reflect the different base rates across
 % groups, but not to unjustly flag people due to their group membership.
 
 \title{A note on the impossibility of ``fairness''}
 
 \author{Thomas Miconi}
+\date{} 
 
 \maketitle
 
 \begin{abstract}
 
-Predictions of people's behavior or status can be affected by biases and
-prejudice, especially when various groups differ in prevalence of the predicted
-condition. Various measures can be used to determine bias or unfairness in a
+Various measures can be used to determine bias or unfairness in a
 predictor. Previous work has already established that some of these measures
 are incompatible with each other. Here we show that, when groups differ in prevalence
-of the predicted event, several intuitive measures of fairness (ratio of
+of the predicted event, several intuitive, reasonable measures of fairness (ratio of
 positive predictions to event occurrence, probability of positive prediction
 given actual occurrence or non-occurrence, and probability of occurrence given
 positive or negative prediction) are all mutually exclusive: if \emph{one} of
 them is equal among groups, \emph{the other two} must differ. The only
 exceptions are for perfect, or trivial (always-positive or always-negative)
-predictors. As a consequence, any non-perfect, non-trivial predictor can always
-be portrayed as biased or unfair under a certain perspective. The result
+predictors. As a consequence, any non-perfect, non-trivial predictor must
+necessarily be ``unfair'' under two out of three reasonable criteria. The result
 applies to all predictors, algorithmic or human. We conclude with possible ways
 to handle this effect when assessing and designing prediction methods.
 
@@ -78,18 +71,18 @@ unjustly flag people due to their group membership.
 
 
 Several measures can be used to determine whether a predictor is biased, by
-comparing them across groups (we write $+$ for situations where the event actually occurs, and $\mathcal{P}$ for cases where we predicted that the event would occur):
+comparing them across groups (in the following, $Y$ is a binary variable indicating whether a certain event of interest actually occurs in reality,  $Pred$ is a binary variable indicating that the event is predicted to occur by the predictor):
 
 \begin{itemize}
 
 \item The ``harshness ratio'', that is, the ratio between the number of predicted and
-actual positive cases $P(\mathcal{P})/P(+)$ \emph{(Measure 1)}
+actual positive cases $P(Pred)/P(Y)$ \emph{(Measure 1)}
 
 \item The proportion of positive (or negative) predictions  for which the event
-turns out to actually occur: $P(+ / \mathcal{P})$ and $P(+ / \neg \mathcal{P})$ \emph{(Measure 2)}
+turns out to actually occur: $P(Y / Pred)$ and $P(Y / \neg Pred)$ \emph{(Measure 2)}
 
 \item The proportion of actually positive (or negative) cases that elicit a
-positive prediction: $P(\mathcal{P} / +)$ and $P(\mathcal{P} / \neg +)$ \emph{(Measure 3)}
+positive prediction: $P(Pred / Y)$ and $P(Pred / \neg Y)$ \emph{(Measure 3)}
 
 \end{itemize}
 
@@ -98,7 +91,7 @@ groups, we might suspect that the predictor is biased. To illustrate with an
 example from criminal justice, if members of one group have a much higher
 probability of eliciting a positive prediction of guilt, in proportion to
 their probability of actual guilt (that is, if one group has a much higher
-$P(+\mathcal{P}) / P(+)$ ratio), we might regard this as prima facie evidence of bias.
+$P(Pred) / P(Y)$ ratio), we might regard this as prima facie evidence of bias.
 Similarly, if guilty defendants from group A have a lower chance of eliciting
 a positive prediction of guilt than guilty members of group B, we would
 suspect that the predictor is biased in favour of group A. Conversely, if
@@ -108,7 +101,7 @@ group B, we would suspect that the predictor is biased against group A.
 
 Ideally, we would want all of these measures to be simultaneously equal across
 groups. And indeed, if our predictions were absolutely perfect, with zero
-errors (i.e. $P(+/\mathcal{P})=P(\mathcal{P}/+)=1$ and $P(+/\neg \mathcal{P})=P(\mathcal{P}/ \neg +)=0$, for all groups),
+errors (i.e. $P(Y/Pred)=P(Pred/Y)=1$ and $P(Y/\neg Pred)=P(Pred/ \neg Y)=0$, for all groups),
 this would actually be the case: all these measures would be strictly equal
 across all groups, independent of each group's prevalence for the condition\footnote{Incidentally, checking whether a proposed measure of fairness is met by a perfect predictor is a useful, if weak, criterion for judging such measures; note that equal prediction rates across groups fails to meet it.}
 
@@ -122,33 +115,38 @@ equalizing \emph{one} of these three measures across groups guarantees that
 
 \section{Proofs}
 
-The proofs are quite straightforward, requiring nothing more than the basic equations of probability and Bayes' theorem. 
 
-We assume that $P(+)$ differs among groups, and that the predictor $\mathcal{P}$ is neither perfect, nor trivial (always-positive or always-negative). 
+We assume that $P(Y)$ differs among groups, and that the predictor $Pred$ is neither perfect, nor trivial (always-positive or always-negative). 
 
-Suppose $P(\mathcal{P}/+)$ and $P(\mathcal{P}/\neg+)$ are equal among groups (Measure 3). What can we say about $P(\mathcal{P})/P(+)$ (Measure 1)?
+Suppose $P(Pred/Y)$ and $P(Pred/\neg Y)$ are equal among groups (Measure 3). What can we say about $P(Pred)/P(Y)$ (Measure 1)?
 
-\begin{align}
-P(\mathcal{P})/P(+) &= \frac{P(\mathcal{P} \cap +) + P(\mathcal{P} \cap \neg +)}{P(+)} \nonumber\\
-&= \frac{P(\mathcal{P} / +) P(+)}{P(+)} + \frac{P(\mathcal{P} / \neg +) P(\neg +)}{P(+)} \nonumber \\
-&= P(\mathcal{P} / +) + P(\mathcal{P} / \neg +) \frac{P(\neg +)}{P(+) \label{eq1}}
-\end{align}
+%\begin{align}
+%P(Pred)/P(Y) &= \frac{P(Pred \cap Y) + P(Pred \cap \neg Y)}{P(Y)} \nonumber\\
+%&= \frac{P(Pred / Y) P(Y)}{P(Y)} + \frac{P(Pred / \neg Y) P(\neg Y)}{P(Y)} \nonumber \\
+%&= P(Pred / Y) + P(Pred / \neg Y) \frac{P(\neg Y)}{P(Y) \label{eq1}}
+%\end{align}
 
-$\frac{P(\neg +)}{P(+)}$ is a strictly monotonic (decreasing) function of $P(+)$. Therefore, if $P(\mathcal{P}/+)$ and $P(\mathcal{P}/\neg+)$ are equal among groups, and $P(+)$ differs among group, then expression \ref{eq1} will differ among groups - unless $P(\mathcal{P} / \neg +)$ is 0, which occurs only for perfect predictors or trivial, never-positive predictors. Therefore, equalizing Measure 3 forces a difference in Measure 1 (and, by simple contraposition, vice versa).
+\begin{dmath}
+P(Pred)/P(Y) = \frac{P(Pred \cap Y) + P(Pred \cap \neg Y)}{P(Y)}\\ 
+= \frac{P(Pred / Y) P(Y)}{P(Y)} + \frac{P(Pred / \neg Y) P(\neg Y)}{P(Y)} \\
+= P(Pred / Y) + P(Pred / \neg Y) \frac{P(\neg Y)}{P(Y) \label{eq1}}
+\end{dmath}
 
-From Bayes' theorem, identical $P(\mathcal{P}/+)$ and different $P(\mathcal{P})/P(+)$ immediately implies different $P(+/\mathcal{P})$. Therefore, equalizing Measure 3 also forces a difference in Measure 2.
+$\frac{P(\neg Y)}{P(Y)}$ is a strictly monotonic (decreasing) function of $P(Y)$. Therefore, if $P(Pred/Y)$ and $P(Pred/\neg Y)$ are equal among groups, and $P(Y)$ differs among group, then expression \ref{eq1} will differ among groups - unless $P(Pred / \neg Y)$ is 0, which occurs only for perfect predictors or trivial, never-positive predictors. Therefore, equalizing Measure 3 forces a difference in Measure 1 (and, by simple contraposition, vice versa).
+
+From Bayes' theorem, identical non-zero $P(Pred/Y)$ and different $P(Pred)/P(Y)$ immediately implies different $P(Y/Pred)$. Therefore, equalizing Measure 3 also forces a difference in Measure 2.
 
 From the same reasoning that led to expression 1, simply by swapping symbols,
-we obtain that if $P(+/\mathcal{P})$ and $P(+/\neg\mathcal{P})$ are equal among
-groups (Measure 2), then $P(+)/P(\mathcal{P})$ is a strictly decreasing
-function of $P(\mathcal{P})$. Now if $P(+)/P(\mathcal{P})$ were equal among
-groups, since $P(+)$ differs among groups, then $P(\mathcal{P})$ would also
-need to differ among groups - and thus $P(+)/P(\mathcal{P})$ (as a strictly monotonic
-function of $P(\mathcal{P})$ would also differ among groups, leading to a
+we obtain that if $P(Y/Pred)$ and $P(Y/\neg Pred)$ are equal among
+groups (Measure 2), then $P(Y)/P(Pred)$ is a strictly decreasing
+function of $P(Pred)$. Now if $P(Y)/P(Pred)$ were equal among
+groups, since $P(Y)$ differs among groups, then $P(Pred)$ would also
+need to differ among groups - and thus $P(Y)/P(Pred)$ (as a strictly monotonic
+function of $P(Pred)$) would also differ among groups, leading to a
 contradiction. Thus, equalizing Measure 2 forces a difference in Measure 1, and
 again vice versa from contraposition.
 
-Again, from Bayes' theorem, identical $P(+/ \mathcal{P})$ and different $P(+)/P(\mathcal{P})$ immediately implies different $P(\mathcal{P}/+)$. Thus, equalizing Measure 2 forces a difference in Measure 3. 
+Again, from Bayes' theorem, identical $P(Y/ Pred)$ and different $P(Y)/P(Pred)$ immediately implies different $P(Pred/Y)$. Thus, equalizing Measure 2 forces a difference in Measure 3. 
 
 Collectively, these proofs substantiate the argument of this paper: equalizing any of these three measures among groups forces both other measures to differ among groups.
 
@@ -169,14 +167,14 @@ The first measure suggests that the predictor should be equally ``harsh'' across
 The second definition may be seen as reflecting the judge's
 viewpoint: ``given the output of the test, what is the chance that the event
 actually occurs?'' Similarly, the third definition seems to reflect the
-defendant's viewpoint: ``Given that I am actually guilty, or innocent, what is the chance that the algorithm will flag me?''
+defendant's viewpoint: ``Given that I am actually innocent (or not), what is the chance that the algorithm will flag me?''
 
-We note that this last measure, in particular, seems to be of special interest. The so-called Blackstone formulation: ``It is better that ten guilty persons escape than that one innocent suffer'' can be interpreted as emphasizing $P(\mathcal{P}/\neg+)$ as the most important measure. It is also the basis for Hardt's equalized odds criterion \cite{hardt2016equality} (which in the binary case is exactly identical to our Measure 3).
+We note that this last measure, in particular, seems to be of special interest. The so-called Blackstone formulation: ``It is better that ten guilty persons escape than that one innocent suffer'' can be interpreted as emphasizing $P(Pred/\neg Y)$ as the most important measure. It is also the basis for Hardt's equalized odds criterion \cite{hardt2016equality} (which in the binary case is exactly identical to our Measure 3).
 
 
 \subsection{Improve the test as much as possible}
 
-As stated in the introduction, a perfect classifier would simultaneously equalize all these measures across groups. Inspection of the proofs reveals that the dependence of these measures on actual prevalence results from terms of the form  $P(\mathcal{P} / \neg +) \frac{P(\neg +)}{P(+)}$ - i.e. an error term multiplied by a strictly monotonic function of the prevalence. If the error terms ($P(\mathcal{P} / \neg +)$, $P(+ / \neg \mathcal{P})$, etc.) can be reduced as much as possible, the discrepancy between the various measures will also decrease. Thus, improving the accurracy of the predictors will tend to improve their fairness (or more precisely, the compatibility between various measures of fairness).
+As stated in the introduction, a perfect classifier would simultaneously equalize all these measures across groups. Inspection of the proofs reveals that the dependence of these measures on actual prevalence results from terms of the form  $P(Pred / \neg Y) \frac{P(\neg Y)}{P(Y)}$ - i.e. an error term multiplied by a strictly monotonic function of the prevalence. If the error terms ($P(Pred / \neg Y)$, $P(Y / \neg Pred)$, etc.) can be reduced as much as possible, the discrepancy between the various measures will also decrease. Thus, improving the accurracy of the predictors will tend to improve their fairness (or more precisely, the compatibility between various measures of fairness).
 
 \subsection{Ignore these measures and reach for a first-principles solution}
 

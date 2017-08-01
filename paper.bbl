@@ -1,0 +1,20 @@
+\begin{thebibliography}{1}
+
+\bibitem{chouldechova2017fair}
+Alexandra Chouldechova.
+\newblock Fair prediction with disparate impact: A study of bias in recidivism
+  prediction instruments.
+\newblock {\em arXiv preprint arXiv:1703.00056}, 2017.
+
+\bibitem{hardt2016equality}
+Moritz Hardt, Eric Price, Nati Srebro, et~al.
+\newblock Equality of opportunity in supervised learning.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  3315--3323, 2016.
+
+\bibitem{kleinberg2016inherent}
+Jon Kleinberg, Sendhil Mullainathan, and Manish Raghavan.
+\newblock Inherent trade-offs in the fair determination of risk scores.
+\newblock {\em arXiv preprint arXiv:1609.05807}, 2016.
+
+\end{thebibliography}
